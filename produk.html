@@ -9,20 +9,13 @@
   <style>
     body { font-family: 'Poppins', sans-serif; }
     .like-btn.liked svg { fill: #e11d48; }
-    .fade-item {
-      opacity: 0;
-      transform: translateY(20px);
-      transition: all 2.0s ease;
-    }
-    .fade-in {
-      opacity: 1 !important;
-      transform: translateY(0) !important;
-    }
+    .fade-item { opacity: 0; transform: translateY(20px); transition: all 2.0s ease; }
+    .fade-in { opacity: 1 !important; transform: translateY(0) !important; }
   </style>
 </head>
 <body class="bg-gradient-to-b from-yellow-100 to-white min-h-screen">
 
-  <!-- Navbar -->
+    <!-- Navbar -->
   <nav class="flex items-center justify-between px-6 py-4 shadow-sm bg-white sticky top-0 z-50">
     <div class="flex items-center space-x-3">
       <img src="assets/logo2.jpeg" alt="Logo"
@@ -39,7 +32,6 @@
       </button>
     </div>
 
-    <!-- Desktop Menu -->
     <ul class="hidden md:flex space-x-6 text-gray-700 font-medium">
       <li><a href="index.html" class="hover:text-yellow-600 transition">Beranda</a></li>
       <li><a href="produk.html" class="text-yellow-600 font-semibold">Produk</a></li>
@@ -51,9 +43,9 @@
   <!-- Mobile Menu -->
   <div id="mobileMenu" class="md:hidden hidden bg-white shadow-md px-6 pt-2 pb-4 space-y-2 text-gray-700 font-medium">
     <a href="index.html" class="block hover:text-yellow-600 transition">Beranda</a>
-    <a href="produk.html" class="block text-yellow-600 font-semibold">Produk</a>
-    <a href="tentang.html" class="block hover:text-yellow-600 transition">Tentang</a>
-    <a href="kontak.html" class="block hover:text-yellow-600 transition">Hubungi kami</a>
+    <a href="produk.html" class="block hover:text-yellow-600 transition">Produk</a>
+    <a href="tentang.html" class="text-yellow-600 font-semibold">Tentang</a>
+    <a href="kontak.html" class="block hover:text-yellow-600 transition">Kontak</a>
   </div>
 
   <!-- Produk Section -->
@@ -81,79 +73,145 @@
               <span class="like-count text-sm">0</span>
             </button>
           </div>
-          <button class="w-full bg-yellow-500 hover:bg-yellow-600 text-white font-semibold py-2 rounded-xl transition">Beli Sekarang</button>
+          <button id="beliSekarang" class="w-full bg-yellow-500 hover:bg-yellow-600 text-white py-2 rounded">Beli Sekarang</button>
         </div>
       </div>
 
     </div>
   </section>
 
+  <!-- Modal Order -->
+<div id="orderModal" class="fixed inset-0 bg-black bg-opacity-50 hidden items-center justify-center z-50">
+  <div class="bg-white rounded-3xl shadow-2xl shadow-yellow-300/40 p-8 w-full max-w-lg relative transform transition-all duration-500 scale-95">
+    <button id="closeModal" class="absolute top-3 right-3 text-gray-400 hover:text-red-500 text-2xl">&times;</button>
+    <h2 class="text-2xl font-bold text-yellow-600 mb-6 text-center">🧾 Formulir Pemesanan</h2>
+    <form class="space-y-5">
+      <input type="text" placeholder="👤 Nama Anda" class="w-full border border-yellow-300 rounded-lg p-3 focus:outline-none focus:ring-2 focus:ring-yellow-500" required>
+      <input type="text" placeholder="📍 Alamat Pengiriman" class="w-full border border-yellow-300 rounded-lg p-3 focus:outline-none focus:ring-2 focus:ring-yellow-500" required>
+
+      <div>
+        <label class="block mb-2 text-sm font-medium text-gray-700">💳 Pilih Pembayaran:</label>
+        <div class="flex items-center justify-center gap-6">
+          
+          <!-- Dana -->
+          <label class="relative cursor-pointer transition-transform transform hover:scale-105 group">
+            <input type="radio" name="pembayaran" value="Dana" class="sr-only">
+            <img src="assets/logo dana.jpg" alt="Dana" class="h-12 rounded-lg transition-all duration-300 shadow-md">
+            <div class="checkmark hidden absolute top-0 right-0 bg-yellow-400 rounded-full w-5 h-5 flex items-center justify-center text-white text-xs shadow-md">
+              ✔
+            </div>
+          </label>
+
+          <!-- OVO -->
+          <label class="relative cursor-pointer transition-transform transform hover:scale-105 group">
+            <input type="radio" name="pembayaran" value="OVO" class="sr-only">
+            <img src="assets/logo ovo.png" alt="OVO" class="h-12 rounded-lg transition-all duration-300 shadow-md">
+            <div class="checkmark hidden absolute top-0 right-0 bg-yellow-400 rounded-full w-5 h-5 flex items-center justify-center text-white text-xs shadow-md">
+              ✔
+            </div>
+          </label>
+        </div>
+      </div>
+
+      <input type="number" id="nomorTelepon" placeholder="📞 Nomor Telepon (untuk pembayaran)" class="w-full border border-yellow-300 rounded-lg p-3 focus:outline-none focus:ring-2 focus:ring-yellow-500" required>
+
+      <button type="submit" class="w-full bg-yellow-500 hover:bg-yellow-600 text-white font-semibold py-3 rounded-lg transition duration-300 shadow-md hover:shadow-lg">
+         Kirim Pesanan
+      </button>
+    </form>
+  </div>
+</div>
+
+
   <!-- Footer -->
   <footer class="text-center py-6 text-gray-500 text-sm border-t mt-10">
-    &copy; <?= date("Y") ?> ParTea. All rights reserved.
+    &copy; <span id="tahun"></span> ParTea. All rights reserved.
   </footer>
 
-  <!-- Script -->
-  <script>
-    // Like Button Function
-    function like(button) {
-      const countEl = button.querySelector('.like-count');
-      let count = parseInt(countEl.innerText);
-      button.classList.toggle('liked');
+<script>
+  function like(button) {
+    const countEl = button.querySelector('.like-count');
+    let count = parseInt(countEl.innerText);
+    button.classList.toggle('liked');
+    button.querySelector('svg').classList.toggle('fill-pink-600');
+    countEl.innerText = button.classList.contains('liked') ? ++count : --count;
+  }
 
-      if (button.classList.contains('liked')) {
-        count++;
-        button.querySelector('svg').classList.add('fill-pink-600');
-      } else {
-        count--;
-        button.querySelector('svg').classList.remove('fill-pink-600');
-      }
+  function getQueryParam(name) {
+    const params = new URLSearchParams(window.location.search);
+    return params.get(name);
+  }
 
-      countEl.innerText = count;
-    }
+  document.addEventListener("DOMContentLoaded", () => {
+    document.getElementById("tahun").textContent = new Date().getFullYear();
 
-    // Ambil parameter URL
-    function getQueryParam(name) {
-      const params = new URLSearchParams(window.location.search);
-      return params.get(name);
-    }
-
-    document.addEventListener("DOMContentLoaded", () => {
-      const burgerBtn = document.getElementById("burgerBtn");
-      const mobileMenu = document.getElementById("mobileMenu");
-
-      burgerBtn.addEventListener("click", () => {
-        mobileMenu.classList.toggle("hidden");
-      });
-
-      // Animasi fade-in produk
-      const items = document.querySelectorAll('.fade-item');
-      items.forEach((item, index) => {
-        setTimeout(() => {
-          item.classList.add('fade-in');
-        }, 500 + index * 300);
-      });
-
-      // Logika diskon
-      const urlDiskon = getQueryParam('diskon') === '1';
-      if (urlDiskon) {
-        sessionStorage.setItem('sudahKlaimDiskon', 'true');
-        history.replaceState(null, '', 'produk.html');
-      }
-
-      const diskon = sessionStorage.getItem('sudahKlaimDiskon') === 'true';
-      const hargaEl = document.querySelector('.harga-produk');
-
-      if (diskon) {
-        hargaEl.innerHTML = `
-          <span class="line-through text-gray-400 mr-2">Rp10.000</span>
-          <span class="text-yellow-600 font-semibold">Rp7.000</span>
-        `;
-      } else {
-        hargaEl.innerHTML = `<span class="text-yellow-600 font-semibold">Rp10.000</span>`;
-      }
+    // Burger menu
+    const burgerBtn = document.getElementById("burgerBtn");
+    const mobileMenu = document.getElementById("mobileMenu");
+    burgerBtn.addEventListener("click", () => {
+      mobileMenu.classList.toggle("hidden");
     });
-  </script>
 
+    // Metode pembayaran toggle + centang
+    const paymentOptions = document.querySelectorAll('label input[name="pembayaran"]');
+    paymentOptions.forEach(input => {
+      input.addEventListener('click', function () {
+        const isSelected = input.classList.contains('selected');
+        
+        paymentOptions.forEach(i => {
+          i.classList.remove('selected');
+          i.checked = false;
+          const img = i.parentElement.querySelector('img');
+          const checkmark = i.parentElement.querySelector('.checkmark');
+          img.classList.remove('ring-2', 'ring-yellow-400');
+          checkmark.classList.add('hidden');
+        });
+
+        // Jika belum dipilih, aktifkan
+        if (!isSelected) {
+          input.classList.add('selected');
+          input.checked = true;
+          const img = input.parentElement.querySelector('img');
+          const checkmark = input.parentElement.querySelector('.checkmark');
+          img.classList.add('ring-2', 'ring-yellow-400');
+          checkmark.classList.remove('hidden');
+        }
+      });
+    });
+
+    // Animasi produk
+    document.querySelectorAll('.fade-item').forEach((item, index) => {
+      setTimeout(() => item.classList.add('fade-in'), 500 + index * 300);
+    });
+
+    // Diskon dari URL
+    const urlDiskon = getQueryParam('diskon') === '1';
+    if (urlDiskon) {
+      sessionStorage.setItem('sudahKlaimDiskon', 'true');
+      history.replaceState(null, '', 'produk.html');
+    }
+
+    const diskon = sessionStorage.getItem('sudahKlaimDiskon') === 'true';
+    const hargaEl = document.querySelector('.harga-produk');
+    hargaEl.innerHTML = diskon
+      ? '<span class="line-through text-gray-400 mr-2">Rp10.000</span><span class="text-yellow-600 font-semibold">Rp7.000</span>'
+      : '<span class="text-yellow-600 font-semibold">Rp10.000</span>';
+
+    // Beli Sekarang - buka modal
+    document.getElementById("beliSekarang").addEventListener("click", (e) => {
+      e.preventDefault();
+      const modal = document.getElementById("orderModal");
+      modal.classList.remove("hidden");
+      modal.classList.add("flex");
+    });
+
+    // Tutup modal
+    document.getElementById("closeModal").addEventListener("click", () => {
+      const modal = document.getElementById("orderModal");
+      modal.classList.add("hidden");
+      modal.classList.remove("flex");
+    });
+  });
+</script>
 </body>
 </html>
