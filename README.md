@@ -26,4 +26,4 @@ Website ini merupakan proyek web statis modern yang dirancang untuk mempromosika
 
 1. Clone repositori ini:
    ```bash
-  git clone https://github.com/username/nama-repo.git
+   git clone https://github.com/username/nama-repo.git
